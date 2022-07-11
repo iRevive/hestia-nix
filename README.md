@@ -1,1 +1,115 @@
 # hestia-nix
+
+Hesita is a micro library that helps organizing the local development environment.  
+The software is unstable and may change drastically over time.  
+
+If you need a stable alternative use [devshell](https://github.com/numtide/devshell);
+
+# Quick start
+
+You can start with a template:
+```shell
+$ nix flake new -t 'github:iRevive/hestia-nix' my-new-project/ # create a project from the template
+$ cd my-new-project 
+$ nix flake update # update dependencies
+$ nix develop # enter the shell. (or nix-shell)
+```
+
+# Full example
+
+`flake.nix`:
+```nix
+{
+  description = "Environment organized with hestia";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/22.05";
+    hestia.url = "github:iRevive/hestia-nix";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+  };
+
+  outputs = { self, nixpkgs, flake-utils, hestia, ... }:
+    flake-utils.lib.simpleFlake {
+      inherit self nixpkgs;
+      name = "env";
+      overlay = hestia.overlays.default;
+      shell = ./env-shell.nix;
+    };
+}
+```
+
+`env-shell.nix`:
+```nix
+{ pkgs }:
+
+let
+  hestia = pkgs.hestia;
+  colored = hestia.ansi.colored;
+
+  # utility
+
+  my-ip = hestia.shell.mkShellScript {
+    name = "my-ip";
+    description = "show detailed information about your IP";
+    content = ''
+      curl -s --request GET --url https://ipapi.co/json/ | jq .
+    '';
+  };
+
+  # apps
+
+  apps = [ "production" "staging" ];
+
+  scale-app = hestia.shell.mkShellScript rec {
+     name = "scale-app";
+     description = "change the number of running instances of ${colored.white (builtins.elemAt arguments 0)} to ${colored.white (builtins.elemAt arguments 1)}";
+     arguments = [ "production" "0" ];
+     content = ''
+       echo "Scaling $1 to $2"
+     '';
+     completionsContent = hestia.completions.directArgs name apps;
+  };
+
+in
+hestia.shell.mkShell {
+  name = "project-env";
+
+  shellScripts = [
+    {
+      group = "utility";
+      commands = [
+        my-ip
+      ];
+    }
+    {
+      group = "apps";
+      commands = [
+        scale-app
+      ];
+    }
+  ];
+
+  packages = [
+    pkgs.curl
+    pkgs.jq
+  ];
+}
+```
+
+Shell welcome message:
+```
+Welcome to the project-env shell
+
+# Commands [apps]
+
+1) scale-app production 0 - change the number of running instances of production to 0
+
+# Commands [utility]
+
+1) my-ip     - show detailed information about your IP
+2) commands  - show shell-specific commands
+```
