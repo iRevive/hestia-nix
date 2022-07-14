@@ -1,6 +1,6 @@
 # hestia-nix
 
-Hesita is a micro library that helps organizing the local development environment.  
+Hestia is a micro-library that helps with organizing a local development environment.
 The software is unstable and may change drastically over time.  
 
 If you need a stable alternative use [devshell](https://github.com/numtide/devshell);
