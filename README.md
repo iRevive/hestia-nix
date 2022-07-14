@@ -3,19 +3,26 @@
 Hestia is a micro-library that helps with organizing a local development environment.
 The software is unstable and may change drastically over time.  
 
-If you need a stable alternative use [devshell](https://github.com/numtide/devshell);
+## Synposis
 
-# Quick start
+I've been using [devshell](https://github.com/numtide/devshell) for a while, but it does not satisfy me in several use cases:
+- For whatever reason it does not work well with zsh: shell hooks are not executed, MOTD is missing, and so on
+- I need to have various project-specific scripts in a shell to simplify daily tasks. I want to have an extended MOTD with examples (i.e. default arguments, etc)
+- Shell script utilities: basic autocompletion, detailed description with default arguments
+
+Well, it's a great way to learn nix and flakes. Why should I miss such an opportunity?
+
+## Quick start
 
 You can start with a template:
 ```shell
 $ nix flake new -t 'github:iRevive/hestia-nix' my-new-project/ # create a project from the template
 $ cd my-new-project 
 $ nix flake update # update dependencies
-$ nix develop # enter the shell. (or nix-shell)
+$ nix develop # enter the shell. (or nix-shell). Autocompletion works only with nix-shell :(
 ```
 
-# Full example
+## Full example
 
 `flake.nix`:
 ```nix
