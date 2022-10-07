@@ -104,6 +104,10 @@ hestia.shell.mkShell {
     pkgs.curl
     pkgs.jq
   ];
+
+  buildInputs = [
+    pkgs.s2n-tls
+  ];
 }
 ```
 

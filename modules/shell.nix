@@ -85,9 +85,13 @@ rec {
    *     pkgs.curl
    *     pkgs.jq
    *   ];
+   *   
+   *   buildInputs = [
+   *     pkgs.s2n-tls
+   *   ];
    * }
    */
-  mkShell = { name, shellScripts ? [ ], packages ? [ ] }:
+  mkShell = { name, shellScripts ? [ ], packages ? [ ], buildInputs ? [ ] }:
     let
       commands = shellScripts ++ [{ group = "utility"; commands = [ showCommands ]; }];
 
@@ -114,7 +118,7 @@ rec {
         };
     in
     pkgs.mkShell {
-      inherit name;
+      inherit name buildInputs;
 
       shellHook = ''
         echo -e "Welcome to the ${colored.yellow name} shell"
