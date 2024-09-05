@@ -10,7 +10,7 @@
 
         Next steps:  
         1) Update flake: `nix flake update`  
-        2) Enter the shell via `nix develop` or `nix-shell`
+        2) Enter the shell via `nix develop`
       '';
     };
     formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;

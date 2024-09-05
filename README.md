@@ -19,7 +19,7 @@ You can start with a template:
 $ nix flake new -t 'github:iRevive/hestia-nix' my-new-project/ # create a project from the template
 $ cd my-new-project 
 $ nix flake update # update dependencies
-$ nix develop # enter the shell. (or nix-shell). Autocompletion works only with nix-shell :(
+$ nix develop # enter the shell. Autocompletion works with zsh: nix develop -c zsh
 ```
 
 ## Full example
@@ -30,13 +30,9 @@ $ nix develop # enter the shell. (or nix-shell). Autocompletion works only with 
   description = "Environment organized with hestia";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
     hestia.url = "github:iRevive/hestia-nix";
     flake-utils.url = "github:numtide/flake-utils";
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
   };
 
   outputs = { self, nixpkgs, flake-utils, hestia, ... }:
